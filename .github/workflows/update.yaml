@@ -1,0 +1,32 @@
+name: Update price
+on:
+  schedule:
+    - cron: "0 */8 * * *"
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.5'
+          cache: 'pip'
+      - name: Install requirements
+        run: pip install -r requirements.txt
+      - name: '[Main] Fetch value'
+        run: ERA_ACCESS_KEY=${{ secrets.ERA_ACCESS_KEY }} python fetch.py
+      - name: Get current time
+        uses: josStorer/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYYMMDD-HH
+          utcOffset: '+01:00'
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'Update price @ ${{ steps.current-time.outputs.formattedTime }}'
+          commit_user_name: github-actions-bot
+          commit_author: github-actions-bot
