@@ -26,7 +26,3 @@ jobs:
           format: YYYYMMDD-HH
           utcOffset: '+01:00'
       - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: 'Update price @ ${{ steps.current-time.outputs.formattedTime }}'
-          commit_user_name: github-actions-bot
-          commit_author: github-actions-bot
